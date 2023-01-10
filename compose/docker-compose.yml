@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+  database:
+    container_name: database
+    image: mysql:8.0.17
+    environment:
+      MYSQL_ROOT_PASSWORD: lgpdcompliance
+      MYSQL_DATABASE: lgpdcompliancedb
+    ports:
+      - "3306:3306"
+    networks:
+      - compliance
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 3s
+      retries: 5
+
+  prisma:
+    container_name: prisma
+    build:
+      context: ./../backend
+      dockerfile: Dockerfile.studio
+    ports:
+      - 5555:5555
+    environment:
+      DATABASE_URL: mysql://root:lgpdcompliance@database:3306/lgpdcompliancedb
+    networks:
+      - compliance
+    depends_on:
+      - backend
+
+  backend: 
+    container_name: backend
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./../backend
+    ports:
+      - 8080:8080
+    networks:
+      - compliance
+    depends_on: 
+      database:
+        condition: service_healthy
+
+  frontend: 
+    container_name: frontend
+    build: 
+      dockerfile: Dockerfile
+      context: ./../frontend
+    ports:
+      - 5000:5000
+    networks:
+      - compliance
+    depends_on: 
+      - backend
+        
+      
+      
+
+networks:
+  compliance:
+    driver: bridge

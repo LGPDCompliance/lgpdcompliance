@@ -1,0 +1,17 @@
+# Dependences
+./node_modules
+
+# prisma files
+./prisma/migrations
+
+# config files
+ Dockerfile
+.dockerignore
+.gitignore
+.env
+
+# test files
+requests.test.rest
+
+# docs
+README.md

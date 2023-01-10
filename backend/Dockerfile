@@ -1,0 +1,25 @@
+FROM node:14-alpine
+
+WORKDIR /app
+
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm ci
+RUN npm install -g typescript
+
+COPY . .
+
+ENV PORT=8080
+ENV HOST=http://localhost
+ENV ACCESS_TOKEN_SECRET=
+ENV REFRESH_TOKEN_SECRET=
+ENV NEWS_API_BASE_URL=
+ENV NEWS_API_TOKEN=
+ENV CLIENT_URL=
+ENV DATABASE_URL=
+
+# Production create
+# CMD npx prisma db push --preview-feature --force-reset && npx prisma generate && npx prisma db seed && tsc && node dist/index.js
+
+CMD npx prisma generate && tsc && node dist/index.js

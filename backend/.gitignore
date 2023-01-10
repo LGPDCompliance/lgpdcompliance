@@ -1,0 +1,15 @@
+# dependences
+/node_modules
+yarn.lock
+
+# environment config
+.env
+
+# prisma files
+/prisma/migrations
+
+# debug
+/dist
+/.vscode
+
+
